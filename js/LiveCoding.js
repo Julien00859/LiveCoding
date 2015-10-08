@@ -36,6 +36,9 @@ function write(text, ypos, xpos) {
 }
 
 function cursor(xpos, ypos) {
-    var line = document.getElementById("code").getElementsByTagName("code")[ypos].textContent;
-
+    document.getElementById("curseur").parentNode.removeChild(document.getElementById("curseur"));
+    document.getElementById("current").removeAttribute("id")
+    var line = document.getElementById("code").getElementsByTagName("code")[ypos];
+    line.innerHTML = line.textContent.substring(0, xpos) + "<span id=curseur></span>" + line.textContent.substring(xpos, line.length);
+    line.parentNode.setAttribute("id", "current");
 }
