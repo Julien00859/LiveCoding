@@ -2,6 +2,16 @@ function main() {
     document.getElementById("curseur").style.borderColor = "cornflowerblue";
     document.getElementsByTagName("main")[0].style.backgroundColor = "rgb(40, 44, 52)";
     setInterval(blinkCursor, 500);
+
+    var socket = io.connect('http://Julien00859.no-ip.org:8080');
+    socket.on("write", write(ypos, xpos, text));
+    socket.on("erase", erase(ypos, xpos, length));
+    socket.on("cursor", cursor(ypos, xpos));
+    socket.on("setCoder", setCoder(coder, link));
+    socket.on("setProject", setProject(project, link));
+    socket.on("setDesc", setDesc(desc));
+    socket.on("setFile", setFile(file));
+
 }
 
 function blinkCursor() {
@@ -14,7 +24,7 @@ function blinkCursor() {
     }
 }
 
-function write(text, ypos, xpos) {
+function write(ypos, xpos, text) {
     var lines = document.getElementById("code").getElementsByTagName("code");
     var line = lines[ypos].textContent;
     if (text.indexOf("\n") == -1) {
