@@ -49,11 +49,9 @@ footer {
     box-sizing: border-box;
     width: calc(100% - 32px);
     padding: 0.5em;
-    margin: 10px 8px 1px;
+    margin: 15px 8px 1px;
     text-align: center;
     font-size: 0.8em;
-    position: absolute;
-    bottom: 0px;
 }
 
 a {
