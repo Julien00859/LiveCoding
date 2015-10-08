@@ -35,6 +35,15 @@ function write(text, ypos, xpos) {
     }
 }
 
+function erase(ypos, xpos, length) {
+    var lines = document.getElementById("code").getElementsByTagName("code")
+    while(xpos + length > lines[ypos].textContent.length) {
+        lines[ypos].textContent = lines[ypos].textContent + lines[ypos+1].textContent;
+        lines[ypos+1].parentNode.parentNode.removeChild(lines[ypos+1].parentNode);
+    }
+    lines[ypos].textContent = lines[ypos].textContent.substring(0, xpos) + lines[ypos].textContent.substring(xpos+length, lines[ypos].textContent.length);
+}
+
 function cursor(xpos, ypos) {
     document.getElementById("curseur").parentNode.removeChild(document.getElementById("curseur"));
     document.getElementById("current").removeAttribute("id")
