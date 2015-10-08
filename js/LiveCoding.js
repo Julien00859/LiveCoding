@@ -51,3 +51,23 @@ function cursor(xpos, ypos) {
     line.innerHTML = line.textContent.substring(0, xpos) + "<span id=curseur></span>" + line.textContent.substring(xpos, line.length);
     line.parentNode.setAttribute("id", "current");
 }
+
+function setCoder(coder, link) {
+    var coderDOM = document.getElementById("coder");
+    coderDOM.setAttribute("a", link);
+    coderDOM.textContent = coder;
+}
+
+function setProject(project, link) {
+    var projectDOM = document.getElementById("project");
+    projectDOM.setAttribute("a", link);
+    projectDOM.textContent = project;
+}
+
+function setDesc(desc) {
+    document.getElementById("desc").textContent = desc;
+}
+
+function setFile(file) {
+    document.getElementById("file").textContent = file;
+}
