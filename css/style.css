@@ -1,70 +1,56 @@
 body {
-    font-family: monospace;
     background-color: #21252b;
     color: lightgray;
     margin: 0 8px;
+    font-family: Roboto;
 }
 
 h1 {
     text-decoration: underline;
 }
 
-h3 {
-    font-size: 1.1em;
-}
-
-section {
-    padding: 10px 0;
-    height: 100%;
-    background-color: #282c34;
-}
-
-p {
-    margin: 0;
-    color: darkgrey;
-}
-
-p#current {
+main {
+    font-family: Courier, monospace;
     background-color: #2c323b;
+    padding: 0.5em;
 }
 
-p code{
-    margin-left: 5px;
-}
-
-p span.line{
+#line, #code {
     display: inline-block;
-    width: 2em;
-    text-align: right;
-    padding-right: 10px;
+    color: darkgray;
 }
 
-p#current span.line{
-    background-color: #282c34;
+#line p, #code p {
+    margin: 0;
+}
+
+
+#line p.active {
+    color: lightgray;
+}
+#code p.active {
+    background-color: black;
     color: lightgray;
 }
 
 footer {
-    font-family: sans-serif;
     box-sizing: border-box;
     width: calc(100% - 32px);
     padding: 0.5em;
-    margin: 15px 8px 1px;
+    margin: 16px 8px 1px;
     text-align: center;
     font-size: 0.8em;
 }
 
 a {
     cursor: pointer;
-    color: lightgrey;
     text-decoration: none;
-    font-style: oblique;
 }
 a:hover {
     text-decoration: underline;
 }
 
-#curseur{
+#cursor{
     border-right-style: solid;
     border-right-width: thin;
 }
