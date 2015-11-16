@@ -73,6 +73,11 @@ function erase(ypos, xpos, length) {
 
 function eraseLine(ypos) {
     document.getElementById("code").removeChild(document.getElementById("code").getElementsByTagName("p")[ypos]);
+    document.getElementById("line").removeChild(document.getElementById("line").getElementsByTagName("p")[0]);
+    for (var n=0, lines=document.getElementById("line").getElementsByTagName("p"), code=document.getElementById("code").getElementsByTagName("p"); n<code.length; n++) {
+        lines[n].innerHTML = (n+1).toString().fill("&nbsp;", (lines.length-1).toString().length);
+        lines[n].style.height = code[n].offsetHeight + "px";
+    }
 }
 
 function cursor(ypos, xpos) {

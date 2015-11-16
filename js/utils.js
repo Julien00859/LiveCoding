@@ -120,5 +120,5 @@ String.prototype.fill = function(charToFill, numberOfDigit) {
 }
 
 HTMLCollection.prototype.toArray = function() {
-  return Array.prototype.slice.call(this);
+return Array.prototype.slice.call(this);
 }
