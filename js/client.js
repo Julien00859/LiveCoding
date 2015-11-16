@@ -13,6 +13,7 @@ function main() {
     socket.on("setFile", setFile(file));
     */
     log = new Julien.log();
+    log.disable();
 }
 
 function blinkCursor() {
@@ -39,7 +40,7 @@ function write(ypos, xpos, text) {
         for (var n=1; n < line.length; n++) {
             var DOMCode = document.createElement("p");
             var DOMLine = document.createElement("p");
-            var DOMTextCode = document.createTextNode(line[n] ? line[n] : " "); // Attention ! C'est un &nbsp; !!!
+            var DOMTextCode = document.createTextNode(line[n]);
             var DOMTextLine = document.createTextNode((ypos + n).toString());
             DOMCode.appendChild(DOMTextCode);
             DOMLine.appendChild(DOMTextLine);
@@ -47,16 +48,10 @@ function write(ypos, xpos, text) {
             document.getElementById("line").insertBefore(DOMLine, document.getElementById("line").getElementsByTagName("p")[ypos+n]);
         }
     }
-    document.getElementById("code").style.width = "calc(100% - (2 *" + document.getElementById("line").offsetWidth + "px))";
+    document.getElementById("code").style.minWidth = "calc(100% - (2 *" + document.getElementById("line").offsetWidth + "px))";
     for (var n=0, lines=document.getElementById("line").getElementsByTagName("p"), code=document.getElementById("code").getElementsByTagName("p"); n<lines.length; n++) {
         lines[n].innerHTML = (n+1).toString().fill("&nbsp;", (lines.length-1).toString().length);
         lines[n].style.height = code[n].offsetHeight + "px";
-
-        if (code[n].textContent.length > 1 && code[n].textContent[0] === " "){
-            code[n].textContent = code[n].textContent.slice(1, code[n].textContent.length)
-        } else if (code[n].textContent.length > 1 && code[n].textContent[code[n].textContent.length-1] === " ") {
-            code[n].textContent = code[n].textContent.slice(0, code[n].textContent.length-1)
-        }
     }
 }
 
@@ -66,23 +61,18 @@ function erase(ypos, xpos, length) {
     while(xpos + length > code[ypos].textContent.length) {
         code[ypos].textContent = code[ypos].textContent + code[ypos+1].textContent;
         code[ypos+1].parentNode.removeChild(code[ypos+1]);
-        code[ypos+1].parentNode.removeChild(line[ypos+1]);
+        line[ypos+1].parentNode.removeChild(line[ypos+1]);
     }
     code[ypos].textContent = code[ypos].textContent.substring(0, xpos) + code[ypos].textContent.substring(xpos+length, code[ypos].textContent.length);
-    if(!code[ypos].textContent) {
-        code[ypos].innerHTML = "&nbsp;"
-    }
-
 
     for (var n=0, lines=document.getElementById("line").getElementsByTagName("p"), code=document.getElementById("code").getElementsByTagName("p"); n<code.length; n++) {
         lines[n].innerHTML = (n+1).toString().fill("&nbsp;", (lines.length-1).toString().length);
         lines[n].style.height = code[n].offsetHeight + "px";
-        if (code[n].textContent.length > 1 && code[n].textContent[0] === " "){
-            code[n].textContent = code[n].textContent.slice(1, code[n].textContent.length)
-        } else if (code[n].textContent.length > 1 && code[n].textContent[code[n].textContent.length-1] === " ") {
-            code[n].textContent = code[n].textContent.slice(0, code[n].textContent.length-1)
-        }
     }
+}
+
+function eraseLine(ypos) {
+    document.getElementById("code").removeChild(document.getElementById("code").getElementsByTagName("p")[ypos]);
 }
 
 function cursor(ypos, xpos) {
@@ -121,4 +111,8 @@ function setDesc(desc) {
 
 function setFile(file) {
     document.getElementById("file").textContent = file;
+}
+
+function show(line) {
+    console.log(document.getElementById("code").getElementsByTagName("p")[line].innerHTML)
 }
