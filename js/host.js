@@ -35,7 +35,7 @@ function newLine(ypos) {
   var pCode = document.createElement("p");
   pCode.setAttribute("contenteditable", "true");
   pCode.addEventListener("focus", function(e) {
-    activate(document.getElementById("code").getElementsByTagName("p").toArray().indexOf(e.path[0]));
+    activate(document.getElementById("code").getElementsByTagName("p").toArray().indexOf(e.target));
   });
   pCode.addEventListener("blur", function() {
     activate(-1);
@@ -59,12 +59,13 @@ function activate(ypos) {
     if (i === ypos) {
       lCode[i].className = "active";
       lines[i].className = "active";
-      //lCode[i].focus();
+      lCode[i].focus();
     } else if (lCode[i].className === "active" || lines[i].className === "active") {
       lCode[i].removeAttribute("class");
       lines[i].removeAttribute("class");
     }
   }
+  return lCode[ypos];
 }
 
 function resetWidth() {
@@ -79,20 +80,19 @@ function updateLine() {
 
 function keyPressed(e) {
   console.log(e);
-  var ypos = document.getElementById("code").getElementsByTagName("p").toArray().indexOf(e.path[0]);
-  if (e.keyCode === 13) {
-    activate(newLine(ypos+1));
-
-  } else {
-    var bef = e.path[0].textContent;
-    setTimeout(function(){
-      var aft = e.path[0].textContent;
-      for(var i = 0; i < (aft.length > bef.length ? aft.length : bef.length); i++) {
-        if (bef[i] !== aft[i]) {
-          log.write("Position: " + i + " Charactère: " + e.keyCode);
-          log.write(e.path[0].innerHTML)
-        }
+  var ypos = document.getElementById("code").getElementsByTagName("p").toArray().indexOf(e.target);
+  var bef = e.target.textContent;
+  setTimeout(function() {
+    var aft = e.target.textContent;
+    for(var i = 0; i < (aft.length > bef.length ? aft.length : bef.length); i++) {
+      if (bef[i] !== aft[i]) {
+        log.write("Position: " + i + " Charactère: " + e.keyCode);
       }
-    }, 1);
-  }
+    }
+    if (e.keyCode === 13) {
+      var nextLine = activate(newLine(ypos+1));
+      nextLine.textContent = e.target.getElementsByTagName("div")[0].textContent;
+      e.target.removeChild(e.target.getElementsByTagName("div")[0]);
+    }
+  }, 1);
 }
