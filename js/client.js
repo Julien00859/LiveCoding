@@ -14,6 +14,7 @@ function main() {
     */
     log = new Julien.log();
     log.disable();
+    document.getElementById("code").style.width = "calc(100% - (2 *" + document.getElementById("line").offsetWidth + "px))";
 }
 
 function blinkCursor() {
@@ -48,7 +49,7 @@ function write(ypos, xpos, text) {
             document.getElementById("line").insertBefore(DOMLine, document.getElementById("line").getElementsByTagName("p")[ypos+n]);
         }
     }
-    document.getElementById("code").style.minWidth = "calc(100% - (2 *" + document.getElementById("line").offsetWidth + "px))";
+    document.getElementById("code").style.width = "calc(100% - (2 *" + document.getElementById("line").offsetWidth + "px))";
     for (var n=0, lines=document.getElementById("line").getElementsByTagName("p"), code=document.getElementById("code").getElementsByTagName("p"); n<lines.length; n++) {
         lines[n].innerHTML = (n+1).toString().fill("&nbsp;", (lines.length-1).toString().length);
         lines[n].style.height = code[n].offsetHeight + "px";
