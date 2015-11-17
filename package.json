@@ -1,0 +1,8 @@
+{
+  "name": "LiveCoding",
+  "version": "0.2.0",
+  "description": "Streamer une session de code",
+  "dependencies": {
+    "socket.io": "^1.3.7"
+  }
+}
