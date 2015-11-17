@@ -79,20 +79,27 @@ function updateLine() {
 }
 
 function keyPressed(e) {
-  console.log(e);
   var ypos = document.getElementById("code").getElementsByTagName("p").toArray().indexOf(e.target);
   var bef = e.target.textContent;
   setTimeout(function() {
     var aft = e.target.textContent;
     for(var i = 0; i < (aft.length > bef.length ? aft.length : bef.length); i++) {
       if (bef[i] !== aft[i]) {
-        log.write("Position: " + i + " Charactère: " + e.keyCode);
+        // log.write("Position: " + i + " Charactère: " + e.keyCode);
       }
     }
     if (e.keyCode === 13) {
       var nextLine = activate(newLine(ypos+1));
-      nextLine.textContent = e.target.getElementsByTagName("div")[0].textContent;
-      e.target.removeChild(e.target.getElementsByTagName("div")[0]);
+      var br = e.target.innerHTML.split("<br>");
+      if (br.length > 1) {
+        // Gecko
+        e.target.innerHTML = br[0];
+        nextLine.innerHTML = br[1];
+      } else {
+        // V8
+        nextLine.textContent = e.target.getElementsByTagName("div")[0].textContent;
+        e.target.removeChild(e.target.getElementsByTagName("div")[0]);
+      }
     }
   }, 1);
 }
