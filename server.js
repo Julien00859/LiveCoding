@@ -26,7 +26,7 @@ http.on("request", function(req, res) {
 		fs.readFile(__dirname + req.url, function(err, data){
 			if (!err) res.end(data);
 		})
-	} else {
+	} else if (req.url.slice(0, 11) !== "/socket.io/") {
 
 		// Une erreur 404
 		console.log("404: " + req.url);
@@ -40,4 +40,10 @@ http.on("request", function(req, res) {
 
 io.on('connection', function(socket){
 	console.log('a user connected');
+	socket.on("clientType", function(type){
+		socket.liveType = type;
+	});
+	socket.on("write", function(ypos, xpos, text) {
+		socket.broadcast.emit("write", ypos, xpos, text);
+	})
 });

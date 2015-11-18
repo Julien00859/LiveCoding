@@ -5,14 +5,7 @@ function main() {
 	newLine();
 	log = new Julien.log();
 	socket = io.connect();
-	socket.on("write", write(ypos, xpos, text));
-	socket.on("erase", erase(ypos, xpos, length));
-	socket.on("cursor", cursor(ypos, xpos));
-	socket.on("setCoder", setCoder(coder, link));
-	socket.on("setProject", setProject(project, link));
-	socket.on("setDesc", setDesc(desc));
-	socket.on("setFile", setFile(file));
-
+	socket.emit("clientType", "host");
 }
 
 function removeLine(ypos) {
@@ -89,12 +82,13 @@ function updateLine() {
 
 function keyPressed(e) {
 	var ypos = document.getElementById("code").getElementsByTagName("p").toArray().indexOf(e.target);
+	var xpos;
 	var bef = e.target.textContent;
 	setTimeout(function() {
 		var aft = e.target.textContent;
 		for(var i = 0; i < (aft.length > bef.length ? aft.length : bef.length); i++) {
 			if (bef[i] !== aft[i]) {
-				// log.write("Position: " + i + " Charactère: " + e.keyCode);
+				xpos = i;
 			}
 		}
 		if (e.keyCode === 13) {
@@ -102,13 +96,19 @@ function keyPressed(e) {
 			var br = e.target.innerHTML.split("<br>");
 			if (br.length > 1) {
 				// Gecko
+				socket.emit("write", ypos, br[0].length, "\n");
 				e.target.innerHTML = br[0];
 				nextLine.innerHTML = br[1];
 			} else {
 				// V8
+				socket.emit("write", ypos, e.target.innerHTML.indexOf("<div>"), "\n");
 				nextLine.textContent = e.target.getElementsByTagName("div")[0].textContent;
 				e.target.removeChild(e.target.getElementsByTagName("div")[0]);
 			}
+		} else if (e.keyCode === 8) {
+			socket.emit("erase", ypos, xpos, 1);
+		} else {
+			socket.emit("write", ypos, xpos, aft[xpos]);
 		}
 	}, 1);
 }
