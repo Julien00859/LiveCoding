@@ -81,34 +81,23 @@ function updateLine() {
 }
 
 function keyPressed(e) {
-	var ypos = document.getElementById("code").getElementsByTagName("p").toArray().indexOf(e.target);
-	var xpos;
-	var bef = e.target.textContent;
-	setTimeout(function() {
-		var aft = e.target.textContent;
-		for(var i = 0; i < (aft.length > bef.length ? aft.length : bef.length); i++) {
-			if (bef[i] !== aft[i]) {
-				xpos = i;
-			}
-		}
-		if (e.keyCode === 13) {
-			var nextLine = activate(newLine(ypos+1));
-			var br = e.target.innerHTML.split("<br>");
-			if (br.length > 1) {
-				// Gecko
-				socket.emit("write", ypos, br[0].length, "\n");
-				e.target.innerHTML = br[0];
-				nextLine.innerHTML = br[1];
-			} else {
-				// V8
-				socket.emit("write", ypos, e.target.innerHTML.indexOf("<div>"), "\n");
-				nextLine.textContent = e.target.getElementsByTagName("div")[0].textContent;
-				e.target.removeChild(e.target.getElementsByTagName("div")[0]);
-			}
-		} else if (e.keyCode === 8) {
-			socket.emit("erase", ypos, xpos, 1);
-		} else {
-			socket.emit("write", ypos, xpos, aft[xpos]);
-		}
-	}, 1);
+	var lines = document.getElementById("code").getElementsByTagName("p")
+	var ypos = lines.toArray().indexOf(e.target);
+	var xpos = getSelection().anchorOffset;
+	if (e.keyCode === 13 || e.keyCode === 10) { // new line
+		activate(newLine(ypos + 1));
+		lines[ypos+1].textContent = lines[ypos].textContent.slice(xpos);
+		lines[ypos].textContent = lines[ypos].textContent.slice(-xpos);
+		e.stopPropagation();
+		e.preventDefault();
+		socket.emit("write", ypos, xpos, "\n")
+	} else if (e.keyCode === 8) { // backspace
+		socket.emit("erase", ypos, xpos-1, 1)
+	} else if (e.keyCode === 9) { // tabulation
+		socket.emit("write", ypos, xpos, "\t")
+		e.stopPropagation();
+		e.preventDefault();
+	} else { // any other key
+		socket.emit("write", ypos, xpos, e.shiftKey ? String.fromCharCode(e.keyCode).toUpperCase() : String.fromCharCode(e.keyCode).toLowerCase());
+	}
 }
