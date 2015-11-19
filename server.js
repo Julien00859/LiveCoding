@@ -38,12 +38,26 @@ http.on("request", function(req, res) {
 	console.log("listening on *:59600");
 });
 
-io.on('connection', function(socket){
-	console.log('a user connected');
+io.on("connection", function(socket){
+	console.log("a user connected");
+
+	socket.on("deconnection", function(socket){
+		console.log("a user deconnected")
+	});
+
 	socket.on("clientType", function(type){
 		socket.liveType = type;
 	});
 	socket.on("write", function(ypos, xpos, text) {
-		socket.broadcast.emit("write", ypos, xpos, text);
-	})
+		if (text !== null) {
+			console.log(text + " - " + text.charCodeAt(0));
+			socket.broadcast.emit("write", ypos, xpos, text);
+		}
+	});
+	socket.on("erase", function(ypos, xpos, length) {
+		socket.broadcast.emit("erase", ypos, xpos, length);
+	});
+	socket.on("cursor", function(ypos, xpos) {
+		socket.broadcast.emit("cursor", ypos, xpos);
+	});
 });

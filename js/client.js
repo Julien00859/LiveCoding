@@ -7,9 +7,9 @@ function main() {
 
 	socket = io.connect();
 	socket.emit("clientType", "client");
-	socket.on("write", function(ypos, xpos, text){write(ypos, xpos, text)});
-	socket.on("erase", function(ypos, xpos, length){erase(ypos, xpos, length)});
-	socket.on("cursor", function(ypos, xpos){cursor(ypos, xpos)});
+	socket.on("write", write);
+	socket.on("erase", erase);
+	socket.on("cursor", cursor);
 	socket.on("setCoder", function(coder, linke){setCoder(coder, link)});
 	socket.on("setProject", function(project, link){setProject(project, link)});
 	socket.on("setDesc", function(desc){setDesc(desc)});
@@ -34,11 +34,13 @@ function blinkCursor() {
 function write(ypos, xpos, text) {
 	var lines = document.getElementById("code").getElementsByTagName("p");
 	var line = lines[ypos].textContent;
-	if (text.indexOf("\n") == -1) {
+
+	if (text.indexOf("\n") === -1) {
 		lines[ypos].textContent = line.substring(0, xpos) + text + line.substring(xpos, line.length);
 	} else {
 		line = line.substring(0, xpos) + text + line.substring(xpos, line.length);
-		line = line.split("\n");
+		line = line.split("\n")
+
 		lines[ypos].textContent = line[0];
 		for (var n=1; n < line.length; n++) {
 			var DOMCode = document.createElement("p");
@@ -61,6 +63,9 @@ function write(ypos, xpos, text) {
 function erase(ypos, xpos, length) {
 	var code = document.getElementById("code").getElementsByTagName("p");
 	var line = document.getElementById("line").getElementsByTagName("p");
+	console.log(xpos);
+	console.log(length);
+	console.log(code[ypos].textContent.length)
 	while(xpos + length > code[ypos].textContent.length) {
 		code[ypos].textContent = code[ypos].textContent + code[ypos+1].textContent;
 		code[ypos+1].parentNode.removeChild(code[ypos+1]);
@@ -84,8 +89,8 @@ function eraseLine(ypos) {
 }
 
 function cursor(ypos, xpos) {
-	var cursor = document.getElementById("cursor")
-	if(cursor) parentNode.removeChild(document.getElementById("cursor"));
+	var cursor = document.getElementById("cursor");
+	if(cursor) cursor.parentNode.removeChild(document.getElementById("cursor"));
 	var code = document.getElementById("code").getElementsByTagName("p");
 	var line = document.getElementById("line").getElementsByTagName("p");
 
