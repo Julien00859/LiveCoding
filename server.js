@@ -57,6 +57,9 @@ io.on("connection", function(socket){
 	socket.on("erase", function(ypos, xpos, length) {
 		socket.broadcast.emit("erase", ypos, xpos, length);
 	});
+	socket.on("eraseLine", function(ypos) {
+		socket.broadcast.emit("eraseLine", ypos);
+	})
 	socket.on("cursor", function(ypos, xpos) {
 		socket.broadcast.emit("cursor", ypos, xpos);
 	});

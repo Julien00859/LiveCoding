@@ -92,7 +92,13 @@ function keyPressed(e) {
 		e.preventDefault();
 		socket.emit("write", ypos, xpos, "\n")
 	} else if (e.keyCode === 8) { // backspace
-		socket.emit("erase", ypos, xpos-1, 1)
+		if (e.target.textContent.length) socket.emit("erase", ypos, xpos-1, 1);
+		else if (lines.length > 1){
+			socket.emit("eraseLine", ypos);
+			e.target.parentNode.getElementsByTagName("p")[ypos-1].focus();
+			document.getElementById("code").removeChild(e.target);
+			document.getElementById("line").removeChild(document.getElementById("line").getElementsByTagName("p")[ypos]);
+		}
 	} else if (e.keyCode === 9) { // tabulation
 		socket.emit("write", ypos, xpos, "\t")
 		e.stopPropagation();
