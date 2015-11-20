@@ -106,4 +106,5 @@ function keyPressed(e) {
 	} else { // any other key
 		socket.emit("write", ypos, xpos, e.shiftKey ? String.fromCharCode(e.keyCode).toUpperCase() : String.fromCharCode(e.keyCode).toLowerCase());
 	}
+	socket.emit("cursor", ypos, xpos+1);
 }

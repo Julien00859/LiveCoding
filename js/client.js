@@ -10,7 +10,7 @@ function main() {
 	socket.on("write", write);
 	socket.on("erase", erase);
 	socket.on("eraseLine", eraseLine);
-	socket.on("cursor", function(ypos, xpos){cursor(ypos, xpos)});
+	socket.on("cursor", cursor);
 	socket.on("setCoder", function(coder, linke){setCoder(coder, link)});
 	socket.on("setProject", function(project, link){setProject(project, link)});
 	socket.on("setDesc", function(desc){setDesc(desc)});
@@ -86,7 +86,7 @@ function eraseLine(ypos) {
 
 function cursor(ypos, xpos) {
 	var cursor = document.getElementById("cursor")
-	if(cursor) parentNode.removeChild(document.getElementById("cursor"));
+	if(cursor) cursor.parentNode.removeChild(document.getElementById("cursor"));
 	var code = document.getElementById("code").getElementsByTagName("p");
 	var line = document.getElementById("line").getElementsByTagName("p");
 
