@@ -19,7 +19,11 @@ function newLine(ypos) {
 	var pCode = document.createElement("p");
 	pCode.setAttribute("contenteditable", "true");
 	pCode.addEventListener("focus", function(e) {
-		if (e.isTrusted) activate(document.getElementById("code").getElementsByTagName("p").toArray().indexOf(e.target));
+		if (e.isTrusted) {
+			var ypos = document.getElementById("code").getElementsByTagName("p").toArray().indexOf(e.target)
+			activate(ypos);
+			socket.emit("cursor", ypos, window.getSelection().anchorOffset);
+		}
 	});
 	pCode.addEventListener("blur", function(e) {
 		if (e.isTrusted) activate(null, null);
@@ -33,6 +37,7 @@ function newLine(ypos) {
 		dCode.appendChild(pCode);
 	}
 
+	// Ajoute un numéro de ligne, met à jour tous les numéros de ligne et la taille total
 	dLine.appendChild(document.createElement("p"));
 	updateLine();
 	resetWidth();
@@ -63,7 +68,8 @@ function activate(ypos, xpos) {
 			if(xpos) {
 				var sel = window.getSelection();
 				var range = document.createRange();
-				range.setStart(lCode[i], xpos);
+				range.setStart(lCode[i].firstChild, xpos);
+				range.collapse();
 				sel.removeAllRanges();
 				sel.addRange(range);
 			}
@@ -100,11 +106,12 @@ function keyPressed(e) {
 	var xpos = getSelection().anchorOffset;
 	// console.log("ypos: " + ypos + ", xpos: " + xpos + ", char: " + e.key + " (" + e.code + ")");
 	if (e.key === "Enter") {
-		activate(newLine(ypos + 1), 1);
-		lines[ypos+1].textContent = lines[ypos].textContent.slice(xpos);
+		activate(newLine(ypos + 1), 0);
+		lines[ypos+1].textContent = lines[ypos].textContent.slice(xpos, lines[ypos].textContent.length);
 		lines[ypos].textContent = lines[ypos].textContent.slice(0, xpos);
 		e.preventDefault();
 		socket.emit("write", ypos, xpos, "\n")
+
 	} else if (e.code === "Backspace" || e.code === "Delete") {
 		if (e.target.textContent.length) socket.emit("erase", ypos, e.keyCode === 8 ? xpos - 1 : xpos, 1);
 		else if (lines.length > 1){
@@ -113,9 +120,18 @@ function keyPressed(e) {
 			document.getElementById("code").removeChild(e.target);
 			document.getElementById("line").removeChild(document.getElementById("line").getElementsByTagName("p")[ypos]);
 		}
+
 	} else if (e.code === "Tab") {
+		e.target.textContent = e.target.textContent.slice(0, xpos) + "    " + e.target.textContent.slice(xpos, e.target.textContent.length);
+		var sel = window.getSelection();
+		var range = document.createRange();
+		range.setStart(e.target.firstChild, xpos+4);
+		range.collapse();
+		sel.removeAllRanges();
+		sel.addRange(range);
 		socket.emit("write", ypos, xpos, "\t")
 		e.preventDefault();
+
 	} else if (e.code.slice(0,5) == "Arrow") {
 		switch (e.code.slice(5)) {
 			case "Left":
@@ -127,6 +143,7 @@ function keyPressed(e) {
 					socket.emit("cursor", ypos, xpos-1)
 				}
 				break;
+
 			case "Right":
 				if(xpos === lines[ypos].textContent.length && ypos < lines.length - 1) {
 					e.preventDefault;
@@ -136,12 +153,14 @@ function keyPressed(e) {
 					socket.emit("cursor", ypos, xpos+1)
 				}
 				break;
+
 			case "Up":
 				if (ypos > 0) {
 					socket.emit("cursor", ypos-1, xpos);
 					activate(ypos-1, xpos <= lines[ypos-1].textContent.length ? xpos : lines[ypos-1].textContent.length);
 				}
 				break;
+
 			case "Down":
 				if (ypos < lines.length - 1) {
 					activate(ypos+1, xpos <= lines[ypos+1].textContent.length ? xpos : lines[ypos+1].textContent.length);
@@ -149,6 +168,7 @@ function keyPressed(e) {
 				}
 				break;
 		}
+
 	} else { // any other key
 		socket.emit("write", ypos, xpos, e.key);
 		socket.emit("cursor", ypos, xpos+1);
