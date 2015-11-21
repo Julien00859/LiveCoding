@@ -2,7 +2,6 @@ var log;
 var socket;
 
 function main() {
-	document.getElementById("cursor").style.borderColor = "white";
 	setInterval(blinkCursor, 500);
 
 	socket = io.connect();
@@ -22,17 +21,17 @@ function main() {
 
 function blinkCursor() {
 	var cursor = document.getElementById("cursor")
-	var activeLine = document.getElementById("code").getElementsByClassName("active")[0]
-	if (cursor) {
-		if (cursor.style.borderColor == "white") {
-			cursor.style.borderColor = "black";
+	if(cursor) {
+		if (cursor.className === "enabled") {
+			cursor.className = "disabled";
 		} else {
-			cursor.style.borderColor = "white";
+			cursor.className = "enabled";
 		}
 	}
 }
 
 function write(ypos, xpos, text) {
+	text = text.replaceAll("\t", "    ");
 	var lines = document.getElementById("code").getElementsByTagName("p");
 	var line = lines[ypos].textContent;
 	if (text.indexOf("\n") == -1) {
