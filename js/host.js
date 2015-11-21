@@ -91,8 +91,8 @@ function keyPressed(e) {
 		e.stopPropagation();
 		e.preventDefault();
 		socket.emit("write", ypos, xpos, "\n")
-	} else if (e.keyCode === 8) { // backspace
-		if (e.target.textContent.length) socket.emit("erase", ypos, xpos-1, 1);
+	} else if (e.keyCode === 8 || e.keyCode === 127) { // backspace
+		if (e.target.textContent.length) socket.emit("erase", ypos, e.keyCode === 8 ? xpos - 1 : xpos, 1);
 		else if (lines.length > 1){
 			socket.emit("eraseLine", ypos);
 			e.target.parentNode.getElementsByTagName("p")[ypos-1].focus();
@@ -104,7 +104,8 @@ function keyPressed(e) {
 		e.stopPropagation();
 		e.preventDefault();
 	} else { // any other key
-		socket.emit("write", ypos, xpos, e.shiftKey ? String.fromCharCode(e.keyCode).toUpperCase() : String.fromCharCode(e.keyCode).toLowerCase());
+		socket.emit("write", ypos, xpos, e.key);
+		console.log(e.code + " : " + e.key);
 	}
 	socket.emit("cursor", ypos, xpos+1);
 }
