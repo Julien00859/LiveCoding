@@ -1,7 +1,7 @@
 var socket;
 
 function main() {
-	newLine();
+	activate(newLine());
 	socket = io.connect();
 	socket.emit("clientType", "host");
 }
@@ -156,15 +156,15 @@ function keyPressed(e) {
 
 			case "Up":
 				if (ypos > 0) {
-					socket.emit("cursor", ypos-1, xpos);
 					activate(ypos-1, xpos <= lines[ypos-1].textContent.length ? xpos : lines[ypos-1].textContent.length);
+					socket.emit("cursor", ypos-1, xpos <= lines[ypos-1].textContent.length ? xpos : lines[ypos-1].textContent.length);
 				}
 				break;
 
 			case "Down":
 				if (ypos < lines.length - 1) {
 					activate(ypos+1, xpos <= lines[ypos+1].textContent.length ? xpos : lines[ypos+1].textContent.length);
-					socket.emit("cursor", ypos+1, xpos);
+					socket.emit("cursor", ypos+1, xpos <= lines[ypos-1].textContent.length ? xpos : lines[ypos-1].textContent.length);
 				}
 				break;
 		}
