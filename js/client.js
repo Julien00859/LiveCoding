@@ -2,14 +2,14 @@ var log;
 var socket;
 
 function main() {
-	document.getElementById("cursor").style.borderColor = "white";
 	setInterval(blinkCursor, 500);
 
 	socket = io.connect();
 	socket.emit("clientType", "client");
-	socket.on("write", function(ypos, xpos, text){write(ypos, xpos, text)});
-	socket.on("erase", function(ypos, xpos, length){erase(ypos, xpos, length)});
-	socket.on("cursor", function(ypos, xpos){cursor(ypos, xpos)});
+	socket.on("write", write);
+	socket.on("erase", erase);
+	socket.on("eraseLine", eraseLine);
+	socket.on("cursor", cursor);
 	socket.on("setCoder", function(coder, linke){setCoder(coder, link)});
 	socket.on("setProject", function(project, link){setProject(project, link)});
 	socket.on("setDesc", function(desc){setDesc(desc)});
@@ -21,17 +21,17 @@ function main() {
 
 function blinkCursor() {
 	var cursor = document.getElementById("cursor")
-	var activeLine = document.getElementById("code").getElementsByClassName("active")[0]
-	if (cursor) {
-		if (cursor.style.borderColor == "white") {
-			cursor.style.borderColor = "black";
+	if(cursor) {
+		if (cursor.className === "enabled") {
+			cursor.className = "disabled";
 		} else {
-			cursor.style.borderColor = "white";
+			cursor.className = "enabled";
 		}
 	}
 }
 
 function write(ypos, xpos, text) {
+	text = text.replaceAll("\t", "    ");
 	var lines = document.getElementById("code").getElementsByTagName("p");
 	var line = lines[ypos].textContent;
 	if (text.indexOf("\n") == -1) {
@@ -85,7 +85,7 @@ function eraseLine(ypos) {
 
 function cursor(ypos, xpos) {
 	var cursor = document.getElementById("cursor")
-	if(cursor) parentNode.removeChild(document.getElementById("cursor"));
+	if(cursor) cursor.parentNode.removeChild(document.getElementById("cursor"));
 	var code = document.getElementById("code").getElementsByTagName("p");
 	var line = document.getElementById("line").getElementsByTagName("p");
 

@@ -5,33 +5,38 @@ body {
 	font-family: Roboto;
 }
 
+/* Titre */
 h1 {
 	text-decoration: underline;
 }
 
+/* Zone de ligne et Zone de code */
 main {
 	font-family: Courier, monospace;
 	background-color: #2c323b;
 	padding: 0.5em;
 }
 
+/* Zone code */
 #code {
 	display: inline-block;
 	color: darkgray;
 }
 
+/* Zone ligne */
 #line {
   display: inline-block;
   color: #666;
 }
 
+/* Chaque ligne dans la zone de code et la zone ligne */
 #line p, #code p {
 	margin: 0;
 	min-height: 1em;
 	width: 100%;
 }
 
-
+/* La ligne active */
 #line p.active {
 	color: lightgray;
 }
@@ -40,6 +45,7 @@ main {
 	color: lightgray;
 }
 
+/* Le footer (dev by...) */
 footer {
 	box-sizing: border-box;
 	width: calc(100% - 32px);
@@ -57,7 +63,17 @@ a:hover {
 	text-decoration: underline;
 }
 
+/* Le curseur (caret) qui doit clignoter */
 #cursor{
 	border-right-style: solid;
 	border-right-width: thin;
+}
+
+/* Les propriéters du curseur lorsqu'il est activé */
+#cursor.enabled{
+	border-right-color: white;
+}
+/* Et lorsqu'il est désactiver */
+#cursor.disabled{
+	border-right-color: black;
 }
