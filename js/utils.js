@@ -1,54 +1,4 @@
 var Julien = {
-	getElem: function(id) {
-		return document.getElementById(id).innerHTML;
-	},
-
-	setElem: function(id, html) {
-		document.getElementById(id).innerHTML = html;
-	},
-
-	addElem: function(id, html) {
-		document.getElementById(id).innerHTML += html;
-	},
-
-	addFirst: function(list, chip) {
-		if (typeof(list) === "string") {
-			list = document.getElementById(list);
-		}
-		if (typeof(chip) === "string") {
-			var li = document.createElement('li');
-			var text = document.createTextNode(chip);
-			li.appendChild(text);
-			chip = li;
-		}
-		if (list.getElementsByTagName("li")) {
-			list.insertBefore(chip, list.firstChild);
-		} else {
-			addLast(list, chip);
-		}
-	},
-
-	addLast: function(list, chip) {
-		if (typeof(list) === "string") {
-			list = document.getElementById(list);
-		}
-		if (typeof(chip) === "string") {
-			var li = document.createElement('li');
-			var text = document.createTextNode(chip);
-			li.appendChild(text);
-			chip = li;
-		}
-		list.appendChild(chip);
-	},
-
-	setCSS: function(id, property, value) {
-		document.getElementById(id).style[property] = value;
-	},
-
-	setClass: function(id, className) {
-		document.getElementById(id).className = className;
-	},
-
 	log: function(id){
 		this.write = function(text) {
 			var p = document.createElement("p");
@@ -120,5 +70,5 @@ String.prototype.fill = function(charToFill, numberOfDigit) {
 }
 
 HTMLCollection.prototype.toArray = function() {
-return Array.prototype.slice.call(this);
+	return Array.prototype.slice.call(this);
 }
